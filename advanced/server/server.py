@@ -133,6 +133,7 @@ class Server(Protocol):
             data = json.loads(data)
         except json.decoder.JSONDecodeError:
             print("Error")
+            self.respondJSON("Error")
             return
         func = commands[data["command"]]
         func(data["id"], self)
