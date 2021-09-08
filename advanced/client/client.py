@@ -38,6 +38,9 @@ class Prompt(cmd.Cmd):
         print("Goodbye")
         reactor.stop()
 
+    def default(self, args:str) -> None:
+        self.sendJSON("unknown", "1")
+
 
 class Client(protocol.Protocol):
     def __init__(self, prompt: Prompt, *args, **kwargs):
