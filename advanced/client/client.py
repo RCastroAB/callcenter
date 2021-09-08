@@ -10,12 +10,14 @@ from twisted.internet import protocol, reactor, endpoints
 
 class Prompt(cmd.Cmd):
     intro = "Available Commands:\ncall <id>\nanswer <id>\nreject <id>\nhangup <id>\nexit"
-
+    # encondes command into JSON and sends it through the client
     def sendJSON(self, command, id):
         data = {"command": command, "id": id}
         data = json.dumps(data)
-        self.server.transport.write(bytes(data, "utf-8"))
+        self.client.transport.write(bytes(data, "utf-8"))
 
+
+    #command funcs
     def do_call(self, args:str) -> None:
         self.sendJSON("call", args)
 
@@ -25,10 +27,10 @@ class Prompt(cmd.Cmd):
     def do_reject(self, args:str) -> None:
         self.sendJSON("reject", args)
 
-
     def do_hangup(self, args:str) -> None:
         self.sendJSON("hangup", args)
 
+    # exit funcs
     def do_EOF(self, args: str) -> None:
         print("\n", end="")
         return self.do_exit(args)
@@ -40,9 +42,11 @@ class Prompt(cmd.Cmd):
 class Client(protocol.Protocol):
     def __init__(self, prompt: Prompt, *args, **kwargs):
         super(Client, self).__init__(*args, **kwargs)
+        #binds the prompt to the client
         self.prompt = prompt
-        self.prompt.server = self
+        self.prompt.client = self
 
+    #called every time the server returns
     def loop(self):
         print(self.prompt.prompt, end="")
         self.prompt.onecmd(input())
