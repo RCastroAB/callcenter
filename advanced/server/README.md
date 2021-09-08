@@ -1,5 +1,5 @@
 
-# Client
+# Server
 
 To execute, run the following commands
 
