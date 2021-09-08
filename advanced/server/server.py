@@ -92,6 +92,8 @@ class Queues:
             self.delete_call(call)
         else:
             #else finish the call propperly
+            opidx = self.call_map[call]
+            operator = self.operators[opidx]
             server.respondJSON(f"Call {call} finished and operator {operator.id} available")
             self.delete_call(call)
 
