@@ -1,4 +1,4 @@
-from __future__ import annotations
+# from __future__ import annotations
 from typing import Tuple, List, Dict, Union
 import string
 import cmd
@@ -75,7 +75,7 @@ class ClientFactory(protocol.ClientFactory):
 def main():
     prompt = Prompt()
     print(prompt.intro)
-    reactor.connectTCP("0.0.0.0", 5678, ClientFactory(prompt))
+    reactor.connectTCP("server", 5678, ClientFactory(prompt))
     reactor.run()
 
 if __name__=="__main__":

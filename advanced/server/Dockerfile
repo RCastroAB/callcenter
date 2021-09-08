@@ -3,5 +3,5 @@ FROM centos:7
 RUN yum -y update
 RUN yum -y install python3
 COPY . .
-RUN pip install -y requirements.txt
+RUN pip3 install -r requirements.txt
 CMD ["python3", "server.py"]

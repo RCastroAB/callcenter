@@ -1,4 +1,4 @@
-from __future__ import annotations
+# from __future__ import annotations
 
 from typing import Tuple, List, Dict, Union
 from twisted.internet import reactor, protocol, endpoints
@@ -39,18 +39,18 @@ class Queues:
         self.call_queue: List[int] = []
 
 
-    def ring(self, opidx: int, call: int, server: Server) -> None:
+    def ring(self, opidx: int, call: int, server) -> None:
         server.respondJSON(f"Call {call} ringing for operator {self.operators[opidx].id}")
         self.operators[opidx].status = "ringing"
         self.operators[opidx].call = call
         self.call_map[call] = opidx
 
 
-    def receive_call(self, call: str, server: Server) -> None:
+    def receive_call(self, call: str, server) -> None:
         server.respondJSON(f"Call {call} received")
         self.allocate_call(call, server)
 
-    def allocate_call(self, call:str, server: Server) -> None:
+    def allocate_call(self, call:str, server) -> None:
         call = int(call)
         #iterate over all operators seeking first one available.
         for i in range(self.num_operators):
@@ -61,14 +61,14 @@ class Queues:
         self.call_queue.append(call)
         server.respondJSON(f"Call {call} waiting in queue")
 
-    def answer_call(self, opid:str, server: Server) -> None:
+    def answer_call(self, opid:str, server) -> None:
         idx = list(self.ascii_chars).index(opid)
         operator = self.operators[idx]
         operator.status = "oncall"
         server.respondJSON(f"Call {operator.call} answered by operator {operator.id}")
 
 
-    def hangup_call(self, call:str, server: Server) -> None:
+    def hangup_call(self, call:str, server) -> None:
         call = int(call)
         #if call was waiting, print missed
         if call in self.call_queue:
@@ -94,7 +94,7 @@ class Queues:
             if len(self.call_queue) > 0:
                 self.ring(opidx, self.call_queue.pop(0), server)
 
-    def reject_call(self, opid: str, server: Server) -> None:
+    def reject_call(self, opid: str, server) -> None:
         idx = list(self.ascii_chars).index(opid)
         operator = self.operators[idx]
         call = operator.call
